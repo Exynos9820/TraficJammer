@@ -1,0 +1,27 @@
+#pragma once
+
+#include "Common.h"
+#include "Config.h"
+#include "Drawable.h"
+#include <raylib.h>
+
+class Car : public Drawable {
+  private:
+    CarConfig m_config;
+    Vector2D m_position;
+    Angle angle;
+    Color m_color;
+    double m_current_speed = 2;
+
+  public:
+    Car(const CarConfig& config)
+        : m_position(config.start_position), m_color(config.color), angle(config.start_angle),
+          m_config(config) {}
+
+    void Render() override;
+    void Render(const Vector2D& position) override;
+    void Move(const Vector2D& move_vector) override;
+    void Update(const std::chrono::microseconds& ms) override;
+
+    friend class Player;
+};
