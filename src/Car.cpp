@@ -1,6 +1,7 @@
 #include "Car.h"
 #include "Common.h"
 #include "RaylibExtCommon.h"
+#include <raymath.h>
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -13,24 +14,44 @@ void Car::Render() {
     const double& radians = angle.radians;
     const float rotation = angle.GetDegrees();
 
-    Rectangle carRect = Rectangle(m_position.x, m_position.y, size.x, size.y);
-    // Center of the car
-    Vector2 origin = Vector2(size.x / 2.0f, size.y / 2.0f);
+    auto recFromV = [](Vector2 pos, Vector2 size) -> Rectangle {
+        return {
+            .x = pos.x,
+            .y = pos.y,
+            .width = size.x,
+            .height = size.y,
+        };
+    };
+    auto const carPos = m_position;
+    // auto const carPos = Vector2(100.0f, 100.0f);
+    auto const carSize = m_config.size;
+    auto carCentre = carSize / 2.0f;
+    auto const backWindowOffset = Vector2{0.2f, 0.0f} * carSize;
+    auto const backWindowSize = Vector2{0.2f, 0.6f} * carSize;
+    auto const backWindowCentre = backWindowSize / 2.0f;
+
+    auto const carRect = recFromV(carPos, carSize);
+    auto const backWindowRec = recFromV(carPos, backWindowSize);
+    DrawRectanglePro(carRect, carCentre, rotation, m_config.color);
+    DrawRectanglePro(backWindowRec, backWindowCentre - backWindowOffset, rotation, BLUE);
 
     // Draw main rectangle
-    DrawRectanglePro(carRect, origin, rotation, m_color);
 
     // Windows
-    Rectangle backWindowRect =
-        RotateRectangle(Rectangle(m_position.x - 0.3 * size.x, m_position.y - 0.2 * size.y,
-                                  0.2 * size.x, 0.4 * size.y),
-                        radians);
+    // Rectangle backWindowRect =
+    //     RotateRectangle(Rectangle(m_position.x - 0.3 * size.x, m_position.y - 0.2 * size.y,
+    //                               0.2 * size.x, 0.4 * size.y),
+    //                     radians);
+    Rectangle backWindowRect = Rectangle(0.3 * size.x, 0.2 * size.y, 0.2 * size.x, 0.4 * size.y);
     // Rectangle backWindowRect = Rectangle(-0.3*size.x + m_position.x + size.x/2, 1.0/6.0*size.y +
     // m_position.y + size.y/2, 0.2*size.x, 0.4 * size.y); Rectangle a =
     // RotateRectangle(Rectangle(m_position.x - 0.3 * size.x, m_position.y - 0.2 * size.y,  0.2 *
     // size.x, 0.4 * size.y), radians);
-    Vector2 origin_back_rect = Vector2(size.x * 0.3, 0);
-    // DrawRectangleRec(backWindowRect, BLUE);
+    // Vector2 origin_back_rect = {
+    //     .x = (float)m_position.x + origin.x,
+    //     .y = (float)m_position.y + origin.y,
+    // };
+    // // DrawRectangleRec(backWindowRect, BLUE);
     // DrawRectanglePro(backWindowRect, origin_back_rect, rotation, BLUE);
 
     // Lights

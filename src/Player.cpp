@@ -20,6 +20,15 @@ void Player::Update(const std::chrono::microseconds& ms) {
         m_car.m_current_speed = std::max(m_car.m_current_speed, 0.0);
     }
 
+    if (IsKeyDown(KEY_W)) {
+        m_car.m_current_speed +=
+            (m_config.car_config.max_speed - m_car.m_current_speed) * ms.count() / 100000;
+    }
+    if (IsKeyDown(KEY_S)) {
+        m_car.m_current_speed -=
+            (m_config.car_config.max_speed - m_car.m_current_speed) * ms.count() / 100000;
+    }
+
     if (IsKeyDown(KEY_A)) {
         m_car.angle.radians -= 0.3 * ms.count() / 100000;
     }
