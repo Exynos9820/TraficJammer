@@ -8,7 +8,7 @@
 class Car : public Drawable {
   private:
     CarConfig m_config;
-    Vector2D m_position;
+    Vector2 m_position;
     Angle angle;
     Color m_color;
     double m_current_speed = 2;
@@ -19,8 +19,8 @@ class Car : public Drawable {
           m_config(config) {}
 
     void Render() override;
-    void Render(const Vector2D& position) override;
-    void Move(const Vector2D& move_vector) override;
+    void Render(const Vector2& position) override;
+    void Move(const Vector2& move_vector) override;
     void Update(const std::chrono::microseconds& ms) override;
 
     friend class Player;

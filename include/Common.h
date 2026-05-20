@@ -5,40 +5,6 @@
 #include "RaylibExtCommon.h"
 #include <raylib.h>
 
-struct Vector2D {
-    double x, y;
-    Vector2D(double x, double y) : x(x), y(y) {}
-
-    Vector2D(const Vector2D& other) = default;
-
-    Vector2D operator+(const Vector2D& other) {
-        return Vector2D(this->x + other.x, this->y + other.y);
-    }
-
-    Vector2D& operator+=(const Vector2D& other) {
-        *this = (*this) + other;
-        return *this;
-    }
-
-    Vector2D operator+(double scalar) { return Vector2D(this->x + scalar, this->y + scalar); }
-
-    Vector2D operator-(const Vector2D& other) {
-        return Vector2D(this->x - other.x, this->y - other.y);
-    }
-
-    Vector2D operator-(double scalar) { return (*this) + (-scalar); }
-
-    Vector2D& operator=(const Vector2D& other) = default;
-
-    Vector2D(const Vector2& v) : x(v.x), y(v.y) {}
-
-    explicit operator Vector2() const {
-        return Vector2{static_cast<float>(x), static_cast<float>(y)};
-    }
-
-    Vector2 ToRaylib() const { return static_cast<Vector2>(*this); }
-};
-
 struct Angle {
     double radians;
 

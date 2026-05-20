@@ -5,10 +5,6 @@
 
 #include <raylib.h>
 
-inline Vector2 operator+(const Vector2& a, const Vector2& b) {
-    return {a.x + b.x, a.y + b.y};
-}
-
 inline Vector2 RotateVector(const Vector2& vector, float radians) {
     return {vector.x * std::cos(radians) - vector.y * std::sin(radians),
             vector.x * std::sin(radians) + vector.y * std::cos(radians)};

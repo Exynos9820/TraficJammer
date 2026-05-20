@@ -6,6 +6,7 @@
 #include <cmath>
 #include <raylib.h>
 #include <math.h>
+#include <raymath.h>
 
 void Car::Render() {
     auto& size = m_config.size;
@@ -50,18 +51,18 @@ void Car::Render() {
     DrawCircleExt(second_light_back + static_cast<Vector2>(m_position), radius_back, RED);
 }
 
-void Car::Render(const Vector2D& position) {
+void Car::Render(const Vector2& position) {
     auto& size = m_config.size;
     DrawRectangle(position.x, position.y, size.x, size.y, m_color);
 }
 
-void Car::Move(const Vector2D& move_vector) {
+void Car::Move(const Vector2& move_vector) {
     this->m_position += move_vector;
 }
 
 void Car::Update(const std::chrono::microseconds& ms) {
-    // Vector2D direction
-    double horizontal_movement = std::cos(angle.radians) * m_current_speed * ms.count() / 1000000;
-    double vertical_movement = std::sin(angle.radians) * m_current_speed * ms.count() / 1000000;
+    // Vector2 direction
+    float horizontal_movement = std::cos(angle.radians) * m_current_speed * ms.count() / 1000000;
+    float vertical_movement = std::sin(angle.radians) * m_current_speed * ms.count() / 1000000;
     Move({horizontal_movement, vertical_movement});
 }

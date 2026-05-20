@@ -30,7 +30,7 @@ void Player::Update(const std::chrono::microseconds& ms) {
     m_car.Update(ms);
 }
 
-void Player::Move(const Vector2D& move_vector) {
+void Player::Move(const Vector2& move_vector) {
     m_car.Move(move_vector);
 }
 
@@ -38,4 +38,4 @@ void Player::Render() {
     m_car.Render();
 }
 
-void Player::Render(const Vector2D& position) {}
+void Player::Render(const Vector2& position) {}

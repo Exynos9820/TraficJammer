@@ -5,8 +5,8 @@
 #include "Common.h"
 
 struct CarConfig {
-    Vector2D start_position;
-    Vector2D size;
+    Vector2 start_position;
+    Vector2 size;
     Angle start_angle;
     double max_speed;
     Color color;

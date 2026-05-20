@@ -10,7 +10,7 @@ class Player : public Drawable {
   public:
     Player(PlayerConfig config) : m_car(config.car_config), m_config(config) {}
     void Update(const std::chrono::microseconds& ms) override;
-    void Move(const Vector2D& move_vector) override;
+    void Move(const Vector2& move_vector) override;
     void Render() override;
-    void Render(const Vector2D& position) override;
+    void Render(const Vector2& position) override;
 };
