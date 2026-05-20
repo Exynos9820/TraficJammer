@@ -1,6 +1,8 @@
 #include "Car.h"
 #include "Common.h"
 #include "RaylibExtCommon.h"
+#include <numbers>
+#include <print>
 #include <raymath.h>
 #include <algorithm>
 #include <chrono>
@@ -10,9 +12,11 @@
 #include <raymath.h>
 
 void Car::Render() {
-    auto& size = m_config.size;
     const double& radians = angle.radians;
     const float rotation = angle.GetDegrees();
+    auto const car_pos = m_position;
+    auto const size = m_config.size;
+    auto carCentre = size / 2.0f;
 
     auto recFromV = [](Vector2 pos, Vector2 size) -> Rectangle {
         return {
@@ -22,41 +26,58 @@ void Car::Render() {
             .height = size.y,
         };
     };
-    auto const carPos = m_position;
-    // auto const carPos = Vector2(100.0f, 100.0f);
-    auto const carSize = m_config.size;
-    auto carCentre = carSize / 2.0f;
-    auto const backWindowOffset = Vector2{0.2f, 0.0f} * carSize;
-    auto const backWindowSize = Vector2{0.2f, 0.6f} * carSize;
-    auto const backWindowCentre = backWindowSize / 2.0f;
 
-    auto const carRect = recFromV(carPos, carSize);
-    auto const backWindowRec = recFromV(carPos, backWindowSize);
-    DrawRectanglePro(carRect, carCentre, rotation, m_config.color);
-    DrawRectanglePro(backWindowRec, backWindowCentre - backWindowOffset, rotation, BLUE);
+    auto const car_rect = recFromV(car_pos, size);
+    DrawRectanglePro(car_rect, carCentre, rotation, m_config.color);
 
-    // Draw main rectangle
+    // Front window
+    auto [front_triangle_1, front_triangle_2] =
+        GetTrapezoid(0.15f * size.x, 0.7 * size.y, 0.5 * size.y);
+    auto front_triangle_offset = Vector2(0, -0.12f * size.x);
+    auto front_triangle_1_rotated =
+        RotateTriangle(front_triangle_1 + front_triangle_offset, radians + std::numbers::pi / 2);
+    auto front_triangle_2_rotated =
+        RotateTriangle(front_triangle_2 + front_triangle_offset, radians + std::numbers::pi / 2);
+    DrawTrapezoid(front_triangle_1_rotated, front_triangle_2_rotated, car_pos);
 
-    // Windows
-    // Rectangle backWindowRect =
-    //     RotateRectangle(Rectangle(m_position.x - 0.3 * size.x, m_position.y - 0.2 * size.y,
-    //                               0.2 * size.x, 0.4 * size.y),
-    //                     radians);
-    Rectangle backWindowRect = Rectangle(0.3 * size.x, 0.2 * size.y, 0.2 * size.x, 0.4 * size.y);
-    // Rectangle backWindowRect = Rectangle(-0.3*size.x + m_position.x + size.x/2, 1.0/6.0*size.y +
-    // m_position.y + size.y/2, 0.2*size.x, 0.4 * size.y); Rectangle a =
-    // RotateRectangle(Rectangle(m_position.x - 0.3 * size.x, m_position.y - 0.2 * size.y,  0.2 *
-    // size.x, 0.4 * size.y), radians);
-    // Vector2 origin_back_rect = {
-    //     .x = (float)m_position.x + origin.x,
-    //     .y = (float)m_position.y + origin.y,
-    // };
-    // // DrawRectangleRec(backWindowRect, BLUE);
-    // DrawRectanglePro(backWindowRect, origin_back_rect, rotation, BLUE);
+    // Back window
+    auto [back_triangle_1, back_triangle_2] =
+        GetTrapezoid(0.15f * size.x, 0.7 * size.y, 0.5 * size.y);
+    auto back_triangle_offset = Vector2(0, -0.28f * size.x);
+    auto back_triangle_1_rotated =
+        RotateTriangle(back_triangle_1 + back_triangle_offset, radians - std::numbers::pi / 2);
+    auto back_triangle_2_rotated =
+        RotateTriangle(back_triangle_2 + back_triangle_offset, radians - std::numbers::pi / 2);
+    DrawTrapezoid(back_triangle_1_rotated, back_triangle_2_rotated, car_pos);
+
+    // Left window
+    auto [left_triangle_1, left_triangle_2] =
+        GetTrapezoid(0.13f * size.y, 0.5 * size.x, 0.25 * size.x);
+    auto left_triangle_offset = Vector2(-0.06f * size.x, -0.17f * size.x);
+    auto left_triangle_1_rotated = RotateTriangle(left_triangle_1 + left_triangle_offset, radians);
+    auto left_triangle_2_rotated = RotateTriangle(left_triangle_2 + left_triangle_offset, radians);
+    DrawTrapezoid(left_triangle_1_rotated, left_triangle_2_rotated, car_pos);
+
+    // Right window
+    auto [right_triangle_1, right_triangle_2] =
+        GetTrapezoid(0.13f * size.y, 0.25 * size.x, 0.5 * size.x);
+    auto right_triangle_offset = Vector2(-0.06f * size.x, 0.17f * size.x);
+    auto right_triangle_1_rotated =
+        RotateTriangle(right_triangle_1 + right_triangle_offset, radians);
+    auto right_triangle_2_rotated =
+        RotateTriangle(right_triangle_2 + right_triangle_offset, radians);
+    DrawTrapezoid(right_triangle_1_rotated, right_triangle_2_rotated, car_pos);
+
+    // Number plate
+    auto const back_window_offset = Vector2{0.45f, 0.0f} * size;
+    auto const back_window_size = Vector2{0.04f, 0.35f} * size;
+    auto const back_window_centre = back_window_size / 2.0f;
+    auto const back_window_rec = recFromV(car_pos, back_window_size);
+    DrawRectanglePro(back_window_rec, back_window_centre - back_window_offset, rotation, WHITE);
 
     // Lights
-    double radius_front = std::min(size.x / 12, size.y / 8);
-    double radius_back = std::min(size.x / 16, size.y / 10);
+    double radius_front = std::min(size.x / 16, size.y / 12);
+    double radius_back = std::min(size.x / 20, size.y / 15);
 
     double partial_width = 9.0 / 20.0 * size.x;
     double partial_height = 3.0 / 8.0 * size.y;
@@ -66,10 +87,10 @@ void Car::Render() {
     Vector2 first_light_back = RotateVector(Vector2(-partial_width, partial_height), radians);
     Vector2 second_light_back = RotateVector(Vector2(-partial_width, -partial_height), radians);
 
-    DrawCircleExt(first_light_front + static_cast<Vector2>(m_position), radius_front, YELLOW);
-    DrawCircleExt(second_light_front + static_cast<Vector2>(m_position), radius_front, YELLOW);
-    DrawCircleExt(first_light_back + static_cast<Vector2>(m_position), radius_back, RED);
-    DrawCircleExt(second_light_back + static_cast<Vector2>(m_position), radius_back, RED);
+    DrawCircleExt(first_light_front + m_position, radius_front, YELLOW);
+    DrawCircleExt(second_light_front + m_position, radius_front, YELLOW);
+    DrawCircleExt(first_light_back + m_position, radius_back, RED);
+    DrawCircleExt(second_light_back + m_position, radius_back, RED);
 }
 
 void Car::Render(const Vector2& position) {
