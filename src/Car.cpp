@@ -27,8 +27,24 @@ void Car::Render() {
         };
     };
 
+    // Car Reactangle
     auto const car_rect = recFromV(car_pos, size);
     DrawRectanglePro(car_rect, carCentre, rotation, m_config.color);
+
+    // Front and back sectors for roundness
+    // Front one has a center in the origin of the car to be more round
+    float front_sector_radius = 0.5f * std::sqrt((size.x * size.x + size.y * size.y));
+    float front_sector_angle = std::atan(size.y / size.x) * (180 / std::numbers::pi);
+    DrawCircleSector(m_position, front_sector_radius, -front_sector_angle + rotation,
+                     front_sector_angle + rotation, 15, m_config.color);
+    // Back one has a center in the back of the car
+    Vector2 back_sector_offset = {size.x / 2.0f, 0};
+    back_sector_offset = RotateVector(back_sector_offset, radians);
+    float back_sector_angle = std::atan(size.y / size.x / 2) * (180 / std::numbers::pi);
+    float back_sector_radius = std::sqrt((size.x * size.x + size.y * size.y / 4.0));
+    DrawCircleSector(m_position + back_sector_offset, back_sector_radius,
+                     180 - back_sector_angle + rotation, 180 + back_sector_angle + rotation, 10,
+                     m_config.color);
 
     // Front window
     auto [front_triangle_1, front_triangle_2] =
