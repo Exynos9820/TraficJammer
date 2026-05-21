@@ -24,3 +24,17 @@ inline CarConfig GetDefaultCarConfig() {
 inline PlayerConfig GetDefaultPlayerConfig() {
     return {GetDefaultCarConfig(), 100};
 }
+
+struct RoadConfig {
+    Vector2 left_top;
+    Vector2 right_top;
+    Vector2 left_bottom;
+    Vector2 right_bottom;
+    int number_lanes;
+    float sides_thickness;
+    int num_separators;
+};
+
+inline RoadConfig GetDefaultRoadConfig() {
+    return {{0, 300}, {800, 300}, {0, 400}, {800, 400}, 2, 3, 50};
+}

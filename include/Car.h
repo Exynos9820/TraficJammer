@@ -3,7 +3,6 @@
 #include "Common.h"
 #include "Config.h"
 #include "Drawable.h"
-#include <raylib.h>
 
 class Car : public Drawable {
   private:
