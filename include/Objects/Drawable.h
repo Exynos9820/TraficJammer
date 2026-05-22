@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common.h"
 #include <chrono>
+#include <raylib.h>
 
 class Drawable {
   public:

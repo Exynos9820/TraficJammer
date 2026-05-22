@@ -2,8 +2,11 @@
 #include <print>
 #include <thread>
 
+#include "CloverTree.h"
 #include "Config.h"
+#include "RadialRoundTree.h"
 #include "Road.h"
+#include "SimpleRoundTree.h"
 #include "raylib.h"
 #include "Car.h"
 #include "Player.h"
@@ -15,6 +18,13 @@ int main() {
     // config.start_angle = 2;
     Player player{config};
     Road road{GetDefaultRoadConfig()};
+    SimpleRoundTree tree{GetDefaultTreeConfig()};
+    TreeConfig config_tree = GetDefaultTreeConfig();
+    config_tree.left_top_p.x += 60;
+    RadialRoundTree tree2{config_tree};
+    TreeConfig config_tree_2 = GetDefaultTreeConfig();
+    config_tree.left_top_p.x += 120;
+    CloverTree tree3{config_tree};
     int frames = 0;
     auto start = std::chrono::high_resolution_clock::now();
     auto previous = std::chrono::high_resolution_clock::now();
@@ -23,12 +33,15 @@ int main() {
         auto now = std::chrono::high_resolution_clock::now();
         BeginDrawing();
         ClearBackground(WHITE);
+        DrawText("Traffic Jammer", 300, 280, 20, LIGHTGRAY);
         road.Render();
         player.Render();
+        tree.Render();
+        tree2.Render();
+        tree3.Render();
         frames++;
         player.Update(std::chrono::time_point_cast<std::chrono::microseconds>(now) -
                       std::chrono::time_point_cast<std::chrono::microseconds>(previous));
-        DrawText("Traffic Jammer", 300, 280, 20, LIGHTGRAY);
         EndDrawing();
         // std::this_thread::sleep_for(10ms);
         previous = now;

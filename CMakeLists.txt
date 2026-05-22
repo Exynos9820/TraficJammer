@@ -12,5 +12,7 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 add_executable(TraficJammer ${SOURCES})
 
 target_include_directories(TraficJammer PRIVATE include)
+target_include_directories(TraficJammer PRIVATE include/Objects)
+target_include_directories(TraficJammer PRIVATE include/Objects/Tree)
 
 target_link_libraries(TraficJammer PRIVATE raylib)
