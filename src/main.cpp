@@ -2,6 +2,7 @@
 #include <print>
 #include <thread>
 
+#include "BushyTree.h"
 #include "CloverTree.h"
 #include "Config.h"
 #include "RadialRoundTree.h"
@@ -13,7 +14,7 @@
 
 int main() {
     InitWindow(800, 600, "Traffic Jammer");
-    SetTargetFPS(10000);
+    SetTargetFPS(120);
     PlayerConfig config = GetDefaultPlayerConfig();
     // config.start_angle = 2;
     Player player{config};
@@ -23,8 +24,11 @@ int main() {
     config_tree.left_top_p.x += 60;
     RadialRoundTree tree2{config_tree};
     TreeConfig config_tree_2 = GetDefaultTreeConfig();
-    config_tree.left_top_p.x += 120;
+    config_tree.left_top_p.x += 60;
     CloverTree tree3{config_tree};
+    TreeConfig config_tree_3 = GetDefaultTreeConfig();
+    config_tree.left_top_p.x += 60;
+    BushyTree tree4{config_tree};
     int frames = 0;
     auto start = std::chrono::high_resolution_clock::now();
     auto previous = std::chrono::high_resolution_clock::now();
@@ -39,6 +43,7 @@ int main() {
         tree.Render();
         tree2.Render();
         tree3.Render();
+        tree4.Render();
         frames++;
         player.Update(std::chrono::time_point_cast<std::chrono::microseconds>(now) -
                       std::chrono::time_point_cast<std::chrono::microseconds>(previous));
