@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Config.h"
-#include "Drawable.h"
+#include "Object.h"
 
-class Tree : public Drawable {
+class Tree : public Object {
   protected:
     TreeConfig m_config;
 

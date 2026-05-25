@@ -1,8 +1,8 @@
 #include "Config.h"
-#include "Drawable.h"
+#include "Object.h"
 #include "Car.h"
 
-class Player : public Drawable {
+class Player : public Object {
   private:
     PlayerConfig m_config;
     Car m_car;

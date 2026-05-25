@@ -2,9 +2,9 @@
 
 #include "Common.h"
 #include "Config.h"
-#include "Drawable.h"
+#include "Object.h"
 
-class Car : public Drawable {
+class Car : public Object {
   private:
     CarConfig m_config;
     Vector2 m_position;

@@ -3,7 +3,7 @@
 #include <chrono>
 #include <raylib.h>
 
-class Drawable {
+class Object {
   public:
     virtual void Move(const Vector2& move_vector) = 0;
     virtual void Update(const std::chrono::microseconds& ms) = 0;

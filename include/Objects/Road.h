@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Config.h"
-#include "Drawable.h"
+#include "Object.h"
 
-class Road : public Drawable {
+class Road : public Object {
   private:
     RoadConfig m_config;
 
