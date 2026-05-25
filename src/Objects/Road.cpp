@@ -8,10 +8,11 @@ void Road::Update(const std::chrono::microseconds& ms) {}
 void Road::Render(const Vector2& position) {}
 
 void Road::Render() {
-    const Vector2& left_bottom = m_config.left_bottom;
-    const Vector2& left_top = m_config.left_top;
-    const Vector2& right_bottom = m_config.right_bottom;
-    const Vector2& right_top = m_config.right_top;
+    const Vector2 delta = m_config.start_left_top - m_position;
+    const Vector2& left_bottom = m_config.start_left_bottom - delta;
+    const Vector2& left_top = m_config.start_left_top - delta;
+    const Vector2& right_bottom = m_config.start_right_bottom - delta;
+    const Vector2& right_top = m_config.start_right_top - delta;
     const float& sides_thicknes = m_config.sides_thickness;
     const int& num_separators = m_config.num_separators;
     // Draw road rectangle

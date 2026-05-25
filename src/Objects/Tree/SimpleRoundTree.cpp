@@ -7,7 +7,7 @@ void SimpleRoundTree::Render() {
     Color big_circle_color = {132, 169, 93, 255};
     // Draw Main
     Vector2 big_circle_pos =
-        m_config.left_top_p + RotateVector(Vector2(size / 2.0f, size / 2.0f), rotation.radians);
+        m_position + RotateVector(Vector2(size / 2.0f, size / 2.0f), rotation.radians);
     DrawCircleExt(big_circle_pos, size / 2.0f, big_circle_color);
     // Draw second
     Color medium_circle_color = {150, 180, 100, 255};

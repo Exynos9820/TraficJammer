@@ -2,6 +2,7 @@
 #include <raylib.h>
 
 #include "Player.h"
+#include "Car.h"
 #include "Common.h"
 
 void Player::Update(const std::chrono::microseconds& ms) {
@@ -27,7 +28,6 @@ void Player::Update(const std::chrono::microseconds& ms) {
     if (IsKeyDown(KEY_D)) {
         m_car.angle.radians += 0.3 * ms.count() / 100000;
     }
-    m_car.Update(ms);
 }
 
 void Player::Render() {
@@ -35,3 +35,11 @@ void Player::Render() {
 }
 
 void Player::Render(const Vector2& position) {}
+
+const Vector2 Player::GetMoveVector(const std::chrono::microseconds& ms) {
+    const auto& angle = this->m_car.angle;
+    const auto& speed = this->m_car.m_current_speed;
+    float horizontal_movement = std::cos(angle.radians) * speed * ms.count() / 1000000;
+    float vertical_movement = std::sin(angle.radians) * speed * ms.count() / 1000000;
+    return {-horizontal_movement, -vertical_movement};
+}

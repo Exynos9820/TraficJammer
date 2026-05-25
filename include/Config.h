@@ -26,10 +26,10 @@ inline PlayerConfig GetDefaultPlayerConfig() {
 }
 
 struct RoadConfig {
-    Vector2 left_top;
-    Vector2 right_top;
-    Vector2 left_bottom;
-    Vector2 right_bottom;
+    Vector2 start_left_top;
+    Vector2 start_right_top;
+    Vector2 start_left_bottom;
+    Vector2 start_right_bottom;
     int number_lanes;
     float sides_thickness;
     int num_separators;
@@ -40,7 +40,7 @@ inline RoadConfig GetDefaultRoadConfig() {
 }
 
 struct TreeConfig {
-    Vector2 left_top_p;
+    Vector2 start_left_top_p;
     Angle rotation;
     float size;
 };

@@ -13,4 +13,5 @@ class Player : public Object {
     void Update(const std::chrono::microseconds& ms) override;
     void Render() override;
     void Render(const Vector2& position) override;
+    const Vector2 GetMoveVector(const std::chrono::microseconds& ms);
 };

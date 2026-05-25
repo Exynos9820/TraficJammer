@@ -8,7 +8,7 @@ class Road : public Object {
     RoadConfig m_config;
 
   public:
-    Road(const RoadConfig& config) : Object(config.left_top), m_config(config) {}
+    Road(const RoadConfig& config) : Object(config.start_left_top), m_config(config) {}
     void Render() override;
     void Render(const Vector2& position) override;
     void Update(const std::chrono::microseconds& ms) override;

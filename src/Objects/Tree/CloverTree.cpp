@@ -6,7 +6,7 @@
 void CloverTree::Render() {
     const float& size = m_config.size;
     const Angle& rotation = m_config.rotation;
-    Vector2 center_offset = m_config.left_top_p + Vector2(size / 2.0f, size / 2.0f);
+    Vector2 center_offset = m_position + Vector2(size / 2.0f, size / 2.0f);
     const float tree_radius = size * 0.3f;
     const Color center_color = {46, 125, 50, 255};
     const Color outer_circle_color = {150, 180, 100, 255};
@@ -14,19 +14,19 @@ void CloverTree::Render() {
 
     // Draw top tree
     Vector2 top_tree_center = {size * 0.5f, size * 0.25f};
-    Vector2 top_tree_absolute = m_config.left_top_p + top_tree_center;
+    Vector2 top_tree_absolute = m_position + top_tree_center;
     DrawCircleExt(top_tree_absolute, tree_radius, outer_circle_color);
     DrawCircleExt(top_tree_absolute, tree_radius / 2, inner_circle_color);
 
     // Draw left tree
     Vector2 left_tree_center = {size * 0.25f, size * 0.75f};
-    Vector2 left_tree_absolute = m_config.left_top_p + left_tree_center;
+    Vector2 left_tree_absolute = m_position + left_tree_center;
     DrawCircleExt(left_tree_absolute, tree_radius, outer_circle_color);
     DrawCircleExt(left_tree_absolute, tree_radius / 2, inner_circle_color);
 
     // Draw right tree
     Vector2 right_tree_center = {size * 0.75f, size * 0.75f};
-    Vector2 right_tree_absolute = m_config.left_top_p + right_tree_center;
+    Vector2 right_tree_absolute = m_position + right_tree_center;
     DrawCircleExt(right_tree_absolute, tree_radius, outer_circle_color);
     DrawCircleExt(right_tree_absolute, tree_radius / 2, inner_circle_color);
 

@@ -6,7 +6,7 @@
 void BushyTree::Render() {
     const float& size = m_config.size;
     const Angle& rotation = m_config.rotation;
-    Vector2 center_offset = m_config.left_top_p + Vector2(size / 2.0f, size / 2.0f);
+    Vector2 center_offset = m_position + Vector2(size / 2.0f, size / 2.0f);
     const float tree_radius = size * 0.4f;
     const float bush_radius = size * 0.12f;
     const Color tree_circle_color = {150, 180, 100, 255};

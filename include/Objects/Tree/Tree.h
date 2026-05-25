@@ -9,7 +9,7 @@ class Tree : public Object {
     TreeConfig m_config;
 
   public:
-    Tree(const TreeConfig& config) : Object(config.left_top_p), m_config(config) {}
+    Tree(const TreeConfig& config) : Object(config.start_left_top_p), m_config(config) {}
     void Render(const Vector2& position) override;
     void Update(const std::chrono::microseconds& ms) override;
 };
