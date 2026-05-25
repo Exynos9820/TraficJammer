@@ -114,10 +114,6 @@ void Car::Render(const Vector2& position) {
     DrawRectangle(position.x, position.y, size.x, size.y, m_color);
 }
 
-void Car::Move(const Vector2& move_vector) {
-    this->m_position += move_vector;
-}
-
 void Car::Update(const std::chrono::microseconds& ms) {
     // Vector2 direction
     float horizontal_movement = std::cos(angle.radians) * m_current_speed * ms.count() / 1000000;

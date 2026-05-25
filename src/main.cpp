@@ -1,6 +1,5 @@
 #include <chrono>
 #include <print>
-#include <thread>
 
 #include "BushyTree.h"
 #include "CloverTree.h"

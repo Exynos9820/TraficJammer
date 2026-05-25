@@ -1,15 +1,9 @@
 #include <cmath>
 #include <raylib.h>
-#include <stdexcept>
 
 #include "Road.h"
 
 void Road::Update(const std::chrono::microseconds& ms) {}
-
-void Road::Move(const Vector2& move_vector) {
-    // roads are unmovable
-    throw std::runtime_error("Tried to move a road");
-}
 
 void Road::Render(const Vector2& position) {}
 

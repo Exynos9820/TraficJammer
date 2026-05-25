@@ -8,9 +8,9 @@ class Player : public Object {
     Car m_car;
 
   public:
-    Player(PlayerConfig config) : m_car(config.car_config), m_config(config) {}
+    Player(PlayerConfig config)
+        : Object(config.car_config.start_position), m_car(config.car_config), m_config(config) {}
     void Update(const std::chrono::microseconds& ms) override;
-    void Move(const Vector2& move_vector) override;
     void Render() override;
     void Render(const Vector2& position) override;
 };

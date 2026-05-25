@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <math.h>
-#include <tuple>
 
 #include <raylib.h>
 #include <raymath.h>

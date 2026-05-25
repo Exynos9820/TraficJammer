@@ -2,14 +2,14 @@
 
 #include "Config.h"
 #include "Object.h"
+#include <raylib.h>
 
 class Tree : public Object {
   protected:
     TreeConfig m_config;
 
   public:
-    Tree(const TreeConfig& config) : m_config(config) {}
+    Tree(const TreeConfig& config) : Object(config.left_top_p), m_config(config) {}
     void Render(const Vector2& position) override;
-    void Move(const Vector2& move_vector) override;
     void Update(const std::chrono::microseconds& ms) override;
 };
