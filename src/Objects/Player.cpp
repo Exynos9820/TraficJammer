@@ -6,19 +6,34 @@
 #include "Common.h"
 
 void Player::Update(const std::chrono::microseconds& ms) {
-    double max_speed = m_config.car_config.max_speed;
+    // TODO(exynos9820) Some clever system for speed?
+    const double& max_speed = m_config.car_config.max_speed;
+    double& current_speed = m_car.m_current_speed;
     if (IsKeyDown(KEY_W)) {
-        m_car.m_current_speed += (max_speed - m_car.m_current_speed) * ms.count() / 100000;
-        m_car.m_current_speed = std::min(m_car.m_current_speed, max_speed);
+        if (current_speed >= 0) {
+            current_speed += 10.0 * ms.count() / 100000;
+        } else {
+            current_speed += 30.0 * ms.count() / 100000;
+        }
+        current_speed = std::min(current_speed, max_speed);
     }
     if (IsKeyDown(KEY_S)) {
-        m_car.m_current_speed -= std::abs(max_speed - m_car.m_current_speed) * ms.count() / 100000;
-        m_car.m_current_speed = std::max(m_car.m_current_speed, -max_speed);
+        if (current_speed >= 0) {
+            current_speed -= 30.0 * ms.count() / 100000;
+        } else {
+            current_speed -= 10.0 * ms.count() / 100000;
+        }
+        current_speed = std::max(current_speed, -max_speed);
     }
 
     if (IsKeyDown(KEY_SPACE)) {
-        m_car.m_current_speed -= std::abs(max_speed - m_car.m_current_speed) * ms.count() / 100000;
-        m_car.m_current_speed = std::max(m_car.m_current_speed, 0.0);
+        if (current_speed >= 0) {
+            current_speed -= 30.0 * ms.count() / 100000;
+            current_speed = std::max(current_speed, 0.0);
+        } else {
+            current_speed += 30.0 * ms.count() / 100000;
+            current_speed = std::min(current_speed, 0.0);
+        }
     }
 
     if (IsKeyDown(KEY_A)) {
