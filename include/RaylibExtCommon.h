@@ -61,3 +61,16 @@ inline std::pair<Triangle, Triangle> GetTrapezoid(float height, float side_1, fl
     return std::make_pair(Triangle{right_botom, left_top, right_top},
                           Triangle{left_bottom, left_top, right_botom});
 }
+
+struct RotatedRectangle {
+    Vector2 p1, p2, p3, p4;
+};
+
+inline RotatedRectangle RotateRectangle(Rectangle rec, float radians) {
+    // we need to get each point and rotate them aroung the origin
+    Vector2 p1 = RotateVector({rec.x, rec.y}, radians);
+    Vector2 p2 = RotateVector({rec.x + rec.width, rec.y}, radians);
+    Vector2 p3 = RotateVector({rec.x + rec.width, rec.y - rec.height}, radians);
+    Vector2 p4 = RotateVector({rec.x, rec.y - rec.height}, radians);
+    return {p1, p2, p3, p4};
+}

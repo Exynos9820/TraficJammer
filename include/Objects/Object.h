@@ -5,8 +5,10 @@
 #include <Common.h>
 
 class Object {
-  public:
+  protected:
     Vector2 m_position;
+
+  public:
     Object(Vector2 position) : m_position(position) {}
     virtual void Update(const std::chrono::microseconds& ms) = 0;
     virtual void Render() = 0;

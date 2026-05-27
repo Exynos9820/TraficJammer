@@ -17,6 +17,7 @@ int main() {
     InitWindow(800, 600, "Traffic Jammer");
     SetTargetFPS(120);
     PlayerConfig config = GetDefaultPlayerConfig();
+    config.car_config.max_speed = 300;
     // config.start_angle = 2;
     Player player{config};
     Road road{GetDefaultRoadConfig()};
