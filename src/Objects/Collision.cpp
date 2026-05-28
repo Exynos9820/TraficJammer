@@ -192,7 +192,107 @@ CollisionManifold GetCollisionManifold(const CircleCollider& c1, const CircleCol
  * @return CollisionManifold that consists from normal and depth
  */
 CollisionManifold GetCollisionManifold(const RectangleCollider& c1, const RectangleCollider& c2) {
-    return {{}, 0};
+    // We need to find rectangle projection on X axis
+    // If we do it for both of them and then check if there is any intersection
+    // No intersection means that they don't intersect at all
+    RotatedRectangle rec1 = RotateRectangle(c1.rec, c1.rotation);
+    RotatedRectangle rec2 = RotateRectangle(c2.rec, c2.rotation);
+    Vector2 corners1[4] = {rec1.p1, rec1.p2, rec1.p3, rec1.p4};
+    Vector2 corners2[4] = {rec2.p1, rec2.p2, rec2.p3, rec2.p4};
+
+    float depth = 0;
+    Vector2 diff = (rec1.p1 + rec1.p3) / 2.0f - (rec2.p1 + rec2.p3) / 2.0f;
+    float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y);
+    Vector2 normal = diff / dist;
+
+    auto edge_normal = [](Vector2 a, Vector2 b) -> Vector2 {
+        // edge vector
+        Vector2 edge = b - a;
+        float len = std::sqrt(edge.x * edge.x + edge.y * edge.y);
+        return {-edge.y / len, edge.x / len};
+    };
+    // We need 4 axes for projection
+    Vector2 axes[4] = {
+        edge_normal(rec1.p1, rec1.p2),
+        edge_normal(rec1.p2, rec1.p3),
+        edge_normal(rec2.p1, rec2.p2),
+        edge_normal(rec2.p2, rec2.p3),
+    };
+
+    for (const auto& axis : axes) {
+        // we now need to project  everything on this vector
+        float min1 = FLT_MAX;
+        float max1 = -FLT_MAX;
+        for (const auto corner : corners1) {
+            float product = Vector2DotProduct(corner, axis);
+            min1 = (product < min1) ? product : min1;
+            max1 = (product > max1) ? product : max1;
+        }
+
+        float min2 = -FLT_MAX;
+        float max2 = FLT_MAX;
+        for (const auto corner : corners2) {
+            float product = Vector2DotProduct(corner, axis);
+            min2 = (product < min2) ? product : min2;
+            max2 = (product > max2) ? product : max2;
+        }
+
+        if (!check_intersection(min1, max1, min2, max2))
+            depth = std::min(max1, max2) - std::max(min1, min2);
+    }
+
+    // if we did got intersection on each axis -> so there is an intersection
+    return {{normal}, depth};
+}
+
+/**
+ * @brief Calculted a manifold between circle and rectangle
+ *
+ * @param c1 circle collider
+ * @param c2 rectangle collider
+ *
+ * @return CollisionManifold that consists from normal and depth
+ */
+CollisionManifold GetCollisionManifold(const RectangleCollider& c2, const CircleCollider& c1) {
+    RotatedRectangle rec2 = RotateRectangle(c2.rec, c2.rotation);
+    Vector2 corners2[4] = {rec2.p1, rec2.p2, rec2.p3, rec2.p4};
+
+    auto edge_normal = [](Vector2 a, Vector2 b) -> Vector2 {
+        // edge vector
+        Vector2 edge = b - a;
+        float len = std::sqrt(edge.x * edge.x + edge.y * edge.y);
+        return {-edge.y / len, edge.x / len};
+    };
+    // We need 4 axes for projection
+    Vector2 axes[2] = {
+        edge_normal(rec2.p1, rec2.p2),
+        edge_normal(rec2.p2, rec2.p3),
+    };
+
+    float depth = 0;
+    Vector2 diff = c1.position - (rec2.p1 + rec2.p3) / 2.0f;
+    float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y);
+    Vector2 normal = diff / dist;
+
+    for (const auto& axis : axes) {
+        // we now need to project  everything on this vector
+        float center_proj = Vector2DotProduct(c1.position, axis);
+        float min1 = center_proj - c1.radius;
+        float max1 = center_proj + c1.radius;
+
+        float min2 = -FLT_MAX;
+        float max2 = FLT_MAX;
+        for (const auto corner : corners2) {
+            float product = Vector2DotProduct(corner, axis);
+            min2 = (product < min2) ? product : min2;
+            max2 = (product > max2) ? product : max2;
+        }
+
+        // if there is no intersection on at least one axis - so no intersection at all
+        if (!check_intersection(min1, max1, min2, max2))
+            depth = std::min(max1, max2) - std::max(min1, min2);
+    }
+    return {{normal}, depth};
 }
 
 /**
@@ -204,7 +304,45 @@ CollisionManifold GetCollisionManifold(const RectangleCollider& c1, const Rectan
  * @return CollisionManifold that consists from normal and depth
  */
 CollisionManifold GetCollisionManifold(const CircleCollider& c1, const RectangleCollider& c2) {
-    return {{}, 0};
+    RotatedRectangle rec2 = RotateRectangle(c2.rec, c2.rotation);
+    Vector2 corners2[4] = {rec2.p1, rec2.p2, rec2.p3, rec2.p4};
+
+    auto edge_normal = [](Vector2 a, Vector2 b) -> Vector2 {
+        // edge vector
+        Vector2 edge = b - a;
+        float len = std::sqrt(edge.x * edge.x + edge.y * edge.y);
+        return {-edge.y / len, edge.x / len};
+    };
+    // We need 4 axes for projection
+    Vector2 axes[2] = {
+        edge_normal(rec2.p1, rec2.p2),
+        edge_normal(rec2.p2, rec2.p3),
+    };
+
+    float depth = 0;
+    Vector2 diff = c1.position - (rec2.p1 + rec2.p3) / 2.0f;
+    float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y);
+    Vector2 normal = diff / dist;
+
+    for (const auto& axis : axes) {
+        // we now need to project  everything on this vector
+        float center_proj = Vector2DotProduct(c1.position, axis);
+        float min1 = center_proj - c1.radius;
+        float max1 = center_proj + c1.radius;
+
+        float min2 = -FLT_MAX;
+        float max2 = FLT_MAX;
+        for (const auto corner : corners2) {
+            float product = Vector2DotProduct(corner, axis);
+            min2 = (product < min2) ? product : min2;
+            max2 = (product > max2) ? product : max2;
+        }
+
+        // if there is no intersection on at least one axis - so no intersection at all
+        if (!check_intersection(min1, max1, min2, max2))
+            depth = std::min(max1, max2) - std::max(min1, min2);
+    }
+    return {{normal}, depth};
 }
 
 /**
