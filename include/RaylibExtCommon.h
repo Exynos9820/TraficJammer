@@ -67,10 +67,13 @@ struct RotatedRectangle {
 };
 
 inline RotatedRectangle RotateRectangle(Rectangle rec, float radians) {
-    // we need to get each point and rotate them aroung the origin
-    Vector2 p1 = RotateVector({rec.x, rec.y}, radians);
-    Vector2 p2 = RotateVector({rec.x + rec.width, rec.y}, radians);
-    Vector2 p3 = RotateVector({rec.x + rec.width, rec.y - rec.height}, radians);
-    Vector2 p4 = RotateVector({rec.x, rec.y - rec.height}, radians);
+    Vector2 center = {rec.x + rec.width / 2.0f, rec.y + rec.height / 2.0f};
+    Vector2 p1 = center + RotateVector({rec.x - center.x, rec.y - center.y}, radians);
+    Vector2 p2 = center + RotateVector({rec.x + rec.width - center.x, rec.y - center.y}, radians);
+    Vector2 p3 =
+        center +
+        RotateVector({rec.x + rec.width - center.x, rec.y + rec.height - center.y}, radians);
+    Vector2 p4 = center + RotateVector({rec.x - center.x, rec.y + rec.height - center.y}, radians);
+
     return {p1, p2, p3, p4};
 }

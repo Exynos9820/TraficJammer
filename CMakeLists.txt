@@ -14,5 +14,6 @@ add_executable(TraficJammer ${SOURCES})
 target_include_directories(TraficJammer PRIVATE include)
 target_include_directories(TraficJammer PRIVATE include/Objects)
 target_include_directories(TraficJammer PRIVATE include/Objects/Tree)
+target_include_directories(TraficJammer PRIVATE include/Objects/Physics)
 
 target_link_libraries(TraficJammer PRIVATE raylib)

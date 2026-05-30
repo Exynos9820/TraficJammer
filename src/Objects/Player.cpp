@@ -36,11 +36,11 @@ void Player::Update(const std::chrono::microseconds& ms) {
         }
     }
 
-    if (IsKeyDown(KEY_A)) {
+    if (IsKeyDown(KEY_A) and m_car.m_current_speed != 0) {
         m_car.angle.radians -= 0.3 * ms.count() / 100000;
     }
 
-    if (IsKeyDown(KEY_D)) {
+    if (IsKeyDown(KEY_D) and m_car.m_current_speed != 0) {
         m_car.angle.radians += 0.3 * ms.count() / 100000;
     }
 }
@@ -49,12 +49,15 @@ void Player::Render() {
     m_car.Render();
 }
 
-void Player::Render(const Vector2& position) {}
+const Collider Player::GetCollider() {
+    return m_car.GetCollider();
+}
 
 const Vector2 Player::GetMoveVector(const std::chrono::microseconds& ms) {
     const auto& angle = this->m_car.angle;
     const auto& speed = this->m_car.m_current_speed;
-    float horizontal_movement = std::cos(angle.radians) * speed * ms.count() / 1000000;
-    float vertical_movement = std::sin(angle.radians) * speed * ms.count() / 1000000;
+    float horizontal_movement = std::cos(angle.radians) * speed * ms.count() / 1000000 + delta.x;
+    float vertical_movement = std::sin(angle.radians) * speed * ms.count() / 1000000 + delta.y;
+    delta = {0, 0};
     return {-horizontal_movement, -vertical_movement};
 }

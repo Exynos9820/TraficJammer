@@ -2,10 +2,18 @@
 #include <raylib.h>
 
 #include "Road.h"
+#include "Collision.h"
+
+auto recFromV = [](Vector2 pos, Vector2 size) -> Rectangle {
+    return {
+        .x = pos.x,
+        .y = pos.y,
+        .width = size.x,
+        .height = size.y,
+    };
+};
 
 void Road::Update(const std::chrono::microseconds& ms) {}
-
-void Road::Render(const Vector2& position) {}
 
 void Road::Render() {
     const Vector2 delta = m_config.start_left_top - m_position;
@@ -15,15 +23,6 @@ void Road::Render() {
     const Vector2& right_top = m_config.start_right_top - delta;
     const float& sides_thicknes = m_config.sides_thickness;
     const int& num_separators = m_config.num_separators;
-    // Draw road rectangle
-    auto recFromV = [](Vector2 pos, Vector2 size) -> Rectangle {
-        return {
-            .x = pos.x,
-            .y = pos.y,
-            .width = size.x,
-            .height = size.y,
-        };
-    };
 
     // Draw Left and Right Sides of the road
     Vector2 left_side = left_top - left_bottom;
@@ -53,4 +52,27 @@ void Road::Render() {
             DrawLineEx(separator_start, separator_end, sides_thicknes, WHITE);
         }
     }
+}
+
+const Collider Road::GetCollider() {
+
+    const Vector2 delta = m_config.start_left_top - m_position;
+    const Vector2& left_bottom = m_config.start_left_bottom - delta;
+    const Vector2& left_top = m_config.start_left_top - delta;
+    const Vector2& right_bottom = m_config.start_right_bottom - delta;
+    const Vector2& right_top = m_config.start_right_top - delta;
+
+    // Draw Left and Right Sides of the road
+    Vector2 left_side = left_top - left_bottom;
+    float height = std::sqrt(left_side.x * left_side.x + left_side.y * left_side.y);
+    Vector2 top_side = right_top - left_top;
+    float width = std::sqrt(top_side.x * top_side.x + top_side.y * top_side.y);
+
+    Vector2 helping_point = {right_top.x, left_top.y};
+    Vector2 helping_side = helping_point - left_top;
+    float len_cat = std::sqrt(helping_side.x * helping_side.x + helping_side.y * helping_side.y);
+    float rotation_rad = std::acos(len_cat / width);
+
+    auto rec = recFromV(left_top, {width, height});
+    return RectangleCollider{rec, rotation_rad};
 }
