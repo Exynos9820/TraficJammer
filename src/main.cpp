@@ -1,9 +1,11 @@
 #include <chrono>
 #include <print>
+#include <thread>
 #include <vector>
 
 #include "BushyTree.h"
 #include "CloverTree.h"
+#include "CollisionManager.h"
 #include "Config.h"
 #include "Object.h"
 #include "RadialRoundTree.h"
@@ -13,9 +15,15 @@
 #include "Car.h"
 #include "Player.h"
 
+void run(CollisionManager* manager) {
+    while (true) {
+        manager->Update();
+    }
+}
+
 int main() {
     InitWindow(800, 600, "Traffic Jammer");
-    SetTargetFPS(120);
+    SetTargetFPS(60);
     PlayerConfig config = GetDefaultPlayerConfig();
     config.car_config.max_speed = 300;
     // config.start_angle = 2;
@@ -36,6 +44,14 @@ int main() {
     auto previous = std::chrono::high_resolution_clock::now();
     using namespace std::chrono_literals;
     std::vector<Object*> objects = {&road, &tree, &tree2, &tree3, &tree4};
+    CollisionManager* manager = CollisionManager::getInstance();
+    manager->AddObject(&tree);
+    manager->AddObject(&tree2);
+    manager->AddObject(&tree3);
+    manager->AddObject(&tree4);
+    manager->AddObject(&player);
+    std::thread t(run, manager);
+    // manager->AddObject(&road);
     while (!WindowShouldClose()) {
         auto now = std::chrono::high_resolution_clock::now();
         BeginDrawing();
@@ -55,6 +71,7 @@ int main() {
         // std::this_thread::sleep_for(10ms);
         previous = now;
     }
+    t.join();
     auto end = std::chrono::high_resolution_clock::now();
     auto res = std::chrono::time_point_cast<std::chrono::milliseconds>(end) -
                std::chrono::time_point_cast<std::chrono::milliseconds>(start);

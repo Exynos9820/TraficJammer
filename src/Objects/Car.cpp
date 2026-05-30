@@ -1,4 +1,5 @@
 #include "Car.h"
+#include "Collision.h"
 #include "Common.h"
 #include "RaylibExtCommon.h"
 #include <numbers>
@@ -10,21 +11,21 @@
 #include <math.h>
 #include <raymath.h>
 
+auto recFromV = [](Vector2 pos, Vector2 size) -> Rectangle {
+    return {
+        .x = pos.x,
+        .y = pos.y,
+        .width = size.x,
+        .height = size.y,
+    };
+};
+
 void Car::Render() {
     const double& radians = angle.radians;
     const float rotation = angle.GetDegrees();
     auto const car_pos = m_position;
     auto const size = m_config.size;
     auto carCentre = size / 2.0f;
-
-    auto recFromV = [](Vector2 pos, Vector2 size) -> Rectangle {
-        return {
-            .x = pos.x,
-            .y = pos.y,
-            .width = size.x,
-            .height = size.y,
-        };
-    };
 
     // Car Reactangle
     auto const car_rect = recFromV(car_pos, size);
@@ -108,14 +109,17 @@ void Car::Render() {
     DrawCircleExt(second_light_back + m_position, radius_back, RED);
 }
 
-void Car::Render(const Vector2& position) {
-    auto& size = m_config.size;
-    DrawRectangle(position.x, position.y, size.x, size.y, m_color);
-}
-
 void Car::Update(const std::chrono::microseconds& ms) {
     // Vector2 direction
     float horizontal_movement = std::cos(angle.radians) * m_current_speed * ms.count() / 1000000;
     float vertical_movement = std::sin(angle.radians) * m_current_speed * ms.count() / 1000000;
     Move({horizontal_movement, vertical_movement});
+}
+
+const Collider Car::GetCollider() {
+    auto const& car_pos = m_position;
+    auto const& size = m_config.size;
+    auto const car_rect = recFromV(car_pos, size);
+    const double& radians = angle.radians;
+    return RectangleCollider{car_rect, (float)radians};
 }
