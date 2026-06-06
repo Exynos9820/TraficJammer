@@ -24,7 +24,7 @@ class Grass {
 
             grasses[i * 9 + 6] = top_tip_x;
             grasses[i * 9 + 7] = top_tip_y;
-            grasses[i * 9 + 8] = 0.0f;
+            grasses[i * 9 + 8] = 1.0f; // cheat code, set to 1 so we can check it later
         }
         return grasses;
     }
