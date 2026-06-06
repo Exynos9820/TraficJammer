@@ -1,4 +1,5 @@
 #include <cerrno>
+#include <cstdlib>
 #include <raylib.h>
 
 #include "Player.h"
@@ -37,7 +38,8 @@ void Player::Update(const std::chrono::microseconds& ms) {
     }
 
     if (IsKeyDown(KEY_A) and m_car.m_current_speed != 0) {
-        m_car.angle.radians -= 0.3 * ms.count() / 100000;
+        m_car.angle.radians -=
+            0.3 * ms.count() * std::min(std::abs(current_speed * 2 / max_speed), 1.0) / 100000;
     }
 
     if (IsKeyDown(KEY_D) and m_car.m_current_speed != 0) {

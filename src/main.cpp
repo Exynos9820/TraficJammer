@@ -14,6 +14,12 @@
 #include "raylib.h"
 #include "Car.h"
 #include "Player.h"
+#include "Grass.h"
+#include "rlgl.h"
+
+#define WIDTH 800
+#define HEIGHT 600
+#define num_grasses 10000
 
 void run(CollisionManager* manager) {
     while (true) {
@@ -22,11 +28,10 @@ void run(CollisionManager* manager) {
 }
 
 int main() {
-    InitWindow(800, 600, "Traffic Jammer");
+    InitWindow(WIDTH, HEIGHT, "Traffic Jammer");
     SetTargetFPS(60);
     PlayerConfig config = GetDefaultPlayerConfig();
     config.car_config.max_speed = 300;
-    // config.start_angle = 2;
     Player player{config};
     Road road{GetDefaultRoadConfig()};
     SimpleRoundTree tree{GetDefaultTreeConfig()};
@@ -51,11 +56,47 @@ int main() {
     manager->AddObject(&tree4);
     manager->AddObject(&player);
     std::thread t(run, manager);
-    // manager->AddObject(&road);
+
+    std::array<float, num_grasses * 9> grasses =
+        Grass::GetGrassVertices<num_grasses>(WIDTH, HEIGHT);
+    Mesh mesh = {0};
+    mesh.vertexCount = num_grasses * 3;
+    mesh.triangleCount = num_grasses;
+
+    mesh.vertices = grasses.data();
+    UploadMesh(&mesh, false);
+    Model model = LoadModelFromMesh(mesh);
+    Shader shader = LoadShader(SHADER_PATH "grass.vs", SHADER_PATH "grass.fs");
+    model.materials[0].shader = shader;
+
+    int mvpLoc = GetShaderLocation(shader, "mvp");
+    Matrix projection = MatrixOrtho(0, WIDTH, 0, HEIGHT, -1, 1);
+    SetShaderValueMatrix(shader, mvpLoc, projection);
+
+    int timeLoc = GetShaderLocation(shader, "u_time");
+    int maxHeightLoc = GetShaderLocation(shader, "u_maxHeight");
+
+    float maxHeight = 600.0f;
+    SetShaderValue(shader, maxHeightLoc, &maxHeight, SHADER_UNIFORM_FLOAT);
+
+    Vector2 resolution = {(float)GetScreenWidth(), (float)GetScreenHeight()};
+
     while (!WindowShouldClose()) {
         auto now = std::chrono::high_resolution_clock::now();
+        float time = (float)GetTime();
+
         BeginDrawing();
-        ClearBackground(WHITE);
+        ClearBackground(DARKGREEN);
+        BeginShaderMode(shader);
+        SetShaderValueMatrix(shader, mvpLoc, projection);
+        SetShaderValue(shader, timeLoc, &time, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(shader, maxHeightLoc, &maxHeight, SHADER_UNIFORM_FLOAT);
+
+        rlEnableVertexArray(mesh.vaoId);
+        rlDrawVertexArray(0, mesh.vertexCount);
+        rlDisableVertexArray();
+        EndShaderMode();
+
         DrawText("Traffic Jammer", 300, 280, 20, LIGHTGRAY);
         const auto ms = std::chrono::time_point_cast<std::chrono::microseconds>(now) -
                         std::chrono::time_point_cast<std::chrono::microseconds>(previous);
@@ -68,7 +109,6 @@ int main() {
         frames++;
         player.Update(ms);
         EndDrawing();
-        // std::this_thread::sleep_for(10ms);
         previous = now;
     }
     t.join();

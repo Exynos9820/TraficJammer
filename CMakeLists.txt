@@ -16,4 +16,10 @@ target_include_directories(TraficJammer PRIVATE include/Objects)
 target_include_directories(TraficJammer PRIVATE include/Objects/Tree)
 target_include_directories(TraficJammer PRIVATE include/Objects/Physics)
 
+file(COPY ${CMAKE_SOURCE_DIR}/src/Shaders DESTINATION ${CMAKE_BINARY_DIR})
+
+target_compile_definitions(TraficJammer PRIVATE
+    SHADER_PATH="${CMAKE_SOURCE_DIR}/src/Shaders/"
+)
+
 target_link_libraries(TraficJammer PRIVATE raylib)
