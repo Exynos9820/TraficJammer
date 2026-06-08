@@ -73,7 +73,7 @@ CollisionManifold GetCollisionManifold(const RectangleCollider& c1, const Rectan
     Vector2 corners1[4] = {rec1.p1, rec1.p2, rec1.p3, rec1.p4};
     Vector2 corners2[4] = {rec2.p1, rec2.p2, rec2.p3, rec2.p4};
 
-    float depth = 0;
+    float depth = FLT_MAX;
     Vector2 diff = (rec1.p1 + rec1.p3) / 2.0f - (rec2.p1 + rec2.p3) / 2.0f;
     float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y);
     Vector2 normal = diff / dist;
@@ -108,7 +108,7 @@ CollisionManifold GetCollisionManifold(const RectangleCollider& c1, const Rectan
             return {0, 0, 0};
 
         float curr_depth = std::min(max1, max2) - std::max(min1, min2);
-        if (curr_depth > depth) {
+        if (curr_depth < depth) {
             depth = curr_depth;
             normal = axis;
         }
@@ -128,7 +128,7 @@ CollisionManifold GetCollisionManifold(const RectangleCollider& c1, const Rectan
  */
 CollisionManifold GetCollisionManifold(const RectangleCollider& c1, const CircleCollider& c2) {
     auto manifold = GetCollisionManifold(c2, c1);
-    return {{-manifold.normal.x, -manifold.normal.y}, -manifold.depth};
+    return {{-manifold.normal.x, -manifold.normal.y}, manifold.depth};
 }
 
 /**
@@ -162,7 +162,7 @@ CollisionManifold GetCollisionManifold(const CircleCollider& c1, const Rectangle
     // We need 4 axes for projection
     Vector2 axes[3] = {edge_normal(rec2.p1, rec2.p2), edge_normal(rec2.p2, rec2.p3), corner_axis};
 
-    float depth = 0;
+    float depth = FLT_MAX;
     Vector2 diff = c1.position - (rec2.p1 + rec2.p3) / 2.0f;
     float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y);
     Vector2 normal = diff / dist;
@@ -185,7 +185,7 @@ CollisionManifold GetCollisionManifold(const CircleCollider& c1, const Rectangle
             return {{0, 0}, 0};
 
         float curr_depth = std::min(max1, max2) - std::max(min1, min2);
-        if (curr_depth > depth) {
+        if (curr_depth < depth) {
             depth = curr_depth;
             normal = axis;
         }

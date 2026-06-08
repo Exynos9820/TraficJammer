@@ -24,7 +24,7 @@ void CollisionManager::Update() {
             const CollisionManifold manifold =
                 GetCollisionManifold(obj1->GetCollider(), obj2->GetCollider());
 
-            if (manifold.depth == 0) {
+            if (manifold.depth <= 0) {
                 continue;
             }
 
