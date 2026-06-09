@@ -25,4 +25,8 @@ void RadialRoundTree::Render() {
         DrawLineEx(center_offset, center_offset + RotateVector(line, std::numbers::pi / 3 * i),
                    size / 30, inner_color);
     }
+
+#ifdef DEBUG
+    DrawCollider(GetCollider());
+#endif
 }

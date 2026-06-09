@@ -19,4 +19,8 @@ void SimpleRoundTree::Render() {
     Vector2 small_circle_pos =
         medium_circle_pos + RotateVector(Vector2(-size / 20, -size / 20), rotation.radians);
     DrawCircleExt(small_circle_pos, size / 10.0f, small_circle_color);
+
+#ifdef DEBUG
+    DrawCollider(GetCollider());
+#endif
 }

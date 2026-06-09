@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cfloat>
 #include <cmath>
+#include <numbers>
 #include <raylib.h>
 #include <variant>
 
@@ -210,4 +211,17 @@ CollisionManifold GetCollisionManifold(const CircleCollider& c1, const Rectangle
 const CollisionManifold GetCollisionManifold(const Collider& c1, const Collider& c2) {
     return std::visit([](auto const& a, auto const& b) { return GetCollisionManifold(a, b); }, c1,
                       c2);
+}
+
+const void DrawCollider(const RectangleCollider& c) {
+    Vector2 carCentre = {c.rec.width / 2.0f, c.rec.height / 2.0f};
+    DrawRectanglePro(c.rec, carCentre, (180.0 / std::numbers::pi) * c.rotation, WHITE);
+}
+
+const void DrawCollider(const CircleCollider& c) {
+    DrawCircleExt(c.position, c.radius, GREEN);
+}
+
+const void DrawCollider(const Collider& c) {
+    return std::visit([](auto const& c) { DrawCollider(c); }, c);
 }

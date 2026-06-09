@@ -52,6 +52,10 @@ void Road::Render() {
             DrawLineEx(separator_start, separator_end, sides_thicknes, WHITE);
         }
     }
+
+#ifdef DEBUG
+    DrawCollider(GetCollider());
+#endif
 }
 
 const Collider Road::GetCollider() {

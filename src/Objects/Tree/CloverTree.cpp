@@ -39,4 +39,8 @@ void CloverTree::Render() {
                size / 20, center_color);
     DrawLineEx(center_offset, center_offset + RotateVector(line * 0.8, -std::numbers::pi * 0.5f),
                size / 20, center_color);
+
+#ifdef DEBUG
+    DrawCollider(GetCollider());
+#endif
 }

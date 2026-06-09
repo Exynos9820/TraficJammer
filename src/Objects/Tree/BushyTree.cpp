@@ -22,4 +22,8 @@ void BushyTree::Render() {
         DrawCircleExt(center_offset + RotateVector(line, radians_move * i), bush_radius,
                       tree_circle_color);
     }
+
+#ifdef DEBUG
+    DrawCollider(GetCollider());
+#endif
 }

@@ -107,6 +107,10 @@ void Car::Render() {
     DrawCircleExt(second_light_front + m_position, radius_front, YELLOW);
     DrawCircleExt(first_light_back + m_position, radius_back, RED);
     DrawCircleExt(second_light_back + m_position, radius_back, RED);
+
+#ifdef DEBUG
+    DrawCollider(GetCollider());
+#endif
 }
 
 void Car::Update(const std::chrono::microseconds& ms) {
