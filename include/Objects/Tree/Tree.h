@@ -14,5 +14,5 @@ class Tree : public Object {
         m_collider_type = ColliderType::STATIC;
     }
     void Update(const std::chrono::microseconds& ms) override;
-    const Collider GetCollider() override;
+    virtual const Collider GetCollider() override;
 };

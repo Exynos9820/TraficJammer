@@ -4,8 +4,7 @@
 void RadialRoundTree::Render() {
     const float& size = m_config.size;
     const Angle& rotation = m_config.rotation;
-    Vector2 center_offset =
-        m_position + RotateVector(Vector2(size / 2.0f, size / 2.0f), rotation.radians);
+    Vector2 center_offset = m_position + Vector2(size / 2.0f, size / 2.0f);
 
     // Draw Main circle
     Color big_circle_color = {46, 125, 50, 255};

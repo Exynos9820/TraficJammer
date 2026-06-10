@@ -123,7 +123,7 @@ void Car::Update(const std::chrono::microseconds& ms) {
 const Collider Car::GetCollider() {
     auto const& car_pos = m_position;
     auto const& size = m_config.size;
-    auto const car_rect = recFromV(car_pos, size);
+    auto const car_rect = recFromV(car_pos - size / 2.0f, size);
     const double& radians = angle.radians;
     return RectangleCollider{car_rect, (float)radians};
 }

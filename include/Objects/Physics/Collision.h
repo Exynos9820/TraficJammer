@@ -61,3 +61,5 @@ struct CollisionManifold {
 using Collider = std::variant<CircleCollider, RectangleCollider>;
 
 const CollisionManifold GetCollisionManifold(const Collider& c1, const Collider& c2);
+
+const void DrawCollider(const Collider& c);

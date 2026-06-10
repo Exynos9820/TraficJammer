@@ -3,6 +3,15 @@
 #include <numbers>
 #include <raylib.h>
 
+auto recFromV = [](Vector2 pos, Vector2 size) -> Rectangle {
+    return {
+        .x = pos.x,
+        .y = pos.y,
+        .width = size.x,
+        .height = size.y,
+    };
+};
+
 void CloverTree::Render() {
     const float& size = m_config.size;
     const Angle& rotation = m_config.rotation;
@@ -43,4 +52,9 @@ void CloverTree::Render() {
 #ifdef DEBUG
     DrawCollider(GetCollider());
 #endif
+}
+
+const Collider CloverTree::GetCollider() {
+    Vector2 rect_pos = m_position;
+    return RectangleCollider{recFromV(rect_pos, {m_config.size, m_config.size}), 0};
 }

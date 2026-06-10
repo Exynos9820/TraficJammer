@@ -5,6 +5,8 @@
 #include "RaylibExtCommon.h"
 #include <raylib.h>
 
+#define DEBUG
+
 struct Angle {
     double radians;
 
@@ -19,7 +21,7 @@ struct Angle {
         return Angle{radians};
     }
 
-    inline double GetDegrees() const { return (180.0 / std::numbers::pi) * radians; }
+    inline float GetDegrees() const { return (180.0 / std::numbers::pi) * radians; }
 
     Angle operator+(const Angle& other) const { return Angle(this->radians + other.radians); }
 

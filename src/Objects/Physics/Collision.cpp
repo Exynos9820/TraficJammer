@@ -115,6 +115,12 @@ CollisionManifold GetCollisionManifold(const RectangleCollider& c1, const Rectan
         }
     }
 
+    // Ensure normal points from c2 toward c1 so CollisionManager pushes them apart
+    Vector2 center1 = (rec1.p1 + rec1.p3) / 2.0f;
+    Vector2 center2 = (rec2.p1 + rec2.p3) / 2.0f;
+    if (Vector2DotProduct(center1 - center2, normal) < 0)
+        normal = {-normal.x, -normal.y};
+
     // if we did got intersection on each axis -> so there is an intersection
     return {{normal}, depth};
 }
@@ -214,12 +220,15 @@ const CollisionManifold GetCollisionManifold(const Collider& c1, const Collider&
 }
 
 const void DrawCollider(const RectangleCollider& c) {
-    Vector2 carCentre = {c.rec.width / 2.0f, c.rec.height / 2.0f};
-    DrawRectanglePro(c.rec, carCentre, (180.0 / std::numbers::pi) * c.rotation, WHITE);
+    RotatedRectangle r = RotateRectangle(c.rec, c.rotation);
+    DrawLineV(r.p1, r.p2, WHITE);
+    DrawLineV(r.p2, r.p3, WHITE);
+    DrawLineV(r.p3, r.p4, WHITE);
+    DrawLineV(r.p4, r.p1, WHITE);
 }
 
 const void DrawCollider(const CircleCollider& c) {
-    DrawCircleExt(c.position, c.radius, GREEN);
+    DrawCircleLinesV(c.position, c.radius, WHITE);
 }
 
 const void DrawCollider(const Collider& c) {
