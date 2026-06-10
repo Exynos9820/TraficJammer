@@ -5,8 +5,6 @@
 #include "RaylibExtCommon.h"
 #include <raylib.h>
 
-#define DEBUG
-
 struct Angle {
     double radians;
 

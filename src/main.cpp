@@ -32,6 +32,7 @@ int main() {
     SetTargetFPS(60);
     PlayerConfig config = GetDefaultPlayerConfig();
     config.car_config.max_speed = 300;
+    config.car_config.start_position = {WIDTH / 2.0f, HEIGHT / 2.0f};
     Player player{config};
     Road road{GetDefaultRoadConfig()};
     SimpleRoundTree tree{GetDefaultTreeConfig()};
